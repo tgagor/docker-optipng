@@ -22,11 +22,11 @@ jobs:
         run: |
           echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
-          docker build --tag ghcr.io/tgagor/optipng:alpine-${{ github.sha }} --cache-from ghcr.io/tgagor/optipng:alpine alpine
-          docker build --tag ghcr.io/tgagor/optipng:debian-${{ github.sha }} --cache-from ghcr.io/tgagor/optipng:debian debian
+          docker build --tag ghcr.io/tgagor/optipng:alpine --cache-from ghcr.io/tgagor/optipng:alpine alpine
+          docker build --tag ghcr.io/tgagor/optipng:debian --cache-from ghcr.io/tgagor/optipng:debian debian
 
-          docker run -i --rm ghcr.io/tgagor/optipng:alpine-${{ github.sha }} --version
-          docker run -i --rm ghcr.io/tgagor/optipng:debian-${{ github.sha }} --version
+          docker run -i --rm ghcr.io/tgagor/optipng:alpine --version
+          docker run -i --rm ghcr.io/tgagor/optipng:debian --version
 
           docker tag ghcr.io/tgagor/optipng:alpine ghcr.io/tgagor/optipng:${GITHUB_REF##*/}
           docker tag ghcr.io/tgagor/optipng:alpine ghcr.io/tgagor/optipng:alpine-${{ github.sha }}
@@ -74,6 +74,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v5.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_release_rules: bug:patch:Bug Fixes,hotfix:patch:Bug Fixes
 
       - name: Create normal GitHub release
         if: github.ref == 'refs/heads/master' && github.event_name != 'schedule'
